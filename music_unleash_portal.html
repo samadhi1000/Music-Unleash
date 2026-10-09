@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Unleash — Quantum Audio-Visual Dimension</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Three.js (WebGL 3D Engine) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- GSAP & ScrollTrigger for Cinematic Snapping & Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti for uploads -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#05070B',
+              surface: '#0B0F19',
+              card: '#121826',
+              cyan: '#00F0FF',
+              magenta: '#FF007A',
+              purple: '#7928CA',
+              glow: 'rgba(0, 240, 255, 0.45)'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            cinzel: ['"Cinzel"', 'serif'],
+            marker: ['"Permanent Marker"', 'cursive']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Smooth Snap Scroll */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #05070B;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00F0FF44;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00F0FF88;
+    }
+
+    /* Snap Scroll Container */
+    .snap-container {
+      scroll-snap-type: y mandatory;
+      overflow-y: auto;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+    .snap-section {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      min-height: 100vh;
+    }
+
+    /* Glassmorphism & Neon Shadows */
+    .glass-card {
+      background: rgba(18, 24, 38, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    .glass-card-hover {
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(0, 240, 255, 0.35);
+      box-shadow: 0 10px 35px -5px rgba(0, 240, 255, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(121, 40, 202, 0.4);
+    }
+    .text-glow-white {
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Animated gradient wave border */
+    .border-gradient {
+      border-image: linear-gradient(135deg, #00f0ff, #ff007a, #7928ca) 1;
+    }
+
+    /* Fixed 3D canvas layer */
+    #quantum-canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="bg-brand-black text-slate-100 font-sans antialiased overflow-hidden selection:bg-brand-cyan selection:text-black">
+
+  <div id="quantum-canvas-container">
+    <canvas id="quantum-particles-canvas" class="w-full h-full"></canvas>
+  </div>
+
+  <!-- Ambient Audio Synthesizer (Interactive Ambient Engine) -->
+  <audio id="ambient-audio-synth" loop crossorigin="anonymous"></audio>
+
+  <header class="fixed top-0 left-0 w-full z-50 px-5 md:px-12 py-4 flex items-center justify-between pointer-events-auto transition-all duration-300" id="site-header">
+    <!-- Brand Logo Group with SVG Reproduction of User's Artwork -->
+    <a href="#hero" class="flex items-center gap-3.5 group cursor-pointer">
+      <div class="relative w-12 h-12 flex items-center justify-center rounded-xl bg-brand-surface/80 border border-brand-cyan/30 group-hover:border-brand-cyan group-hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all">
+        <!-- SVG violin & sound wave motif matching uploaded logo -->
+        <svg class="w-8 h-8 text-white transition-transform duration-500 group-hover:scale-110" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+          <!-- Violin Head & Pegbox -->
+          <circle cx="28" cy="18" r="6" stroke-width="2.5" />
+          <path d="M28 24 L28 85 M23 30 L33 30 M23 42 L33 42 M20 85 L36 85" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M22 45 C15 48, 12 55, 17 62 C13 70, 16 80, 24 85" stroke-width="2.2" stroke-linecap="round" />
+          <!-- Flowing 'M' signature -->
+          <path d="M38 65 C48 30, 56 22, 64 58 C68 45, 75 32, 85 52" stroke="url(#logo-grad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Musical Wave Line -->
+          <path d="M36 84 Q50 77 65 84 T94 84" stroke-width="1.8" stroke-dasharray="2 2" />
+          <defs>
+            <linearGradient id="logo-grad" x1="30%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF" />
+              <stop offset="50%" stop-color="#00F0FF" />
+              <stop offset="100%" stop-color="#FF007A" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-marker tracking-wider text-xl leading-none text-white group-hover:text-brand-cyan transition-colors">Music</span>
+        <span class="font-cinzel text-[10px] tracking-[0.35em] text-slate-400 group-hover:text-white transition-colors">UNLEASH</span>
+      </div>
+    </a>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 bg-brand-surface/70 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 shadow-lg">
+      <button onclick="scrollToSection('hero')" class="nav-item px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition">PORTAL</button>
+      <button onclick="scrollToSection('vault')" class="nav-item px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition">FEED</button>
+      <button onclick="scrollToSection('studio')" class="nav-item px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition">UPLOAD</button>
+      <button onclick="scrollToSection('quantum-reactor')" class="nav-item px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition">REACTOR</button>
+    </nav>
+
+    <!-- Right Action CTAs & Audio Reactive Trigger -->
+    <div class="flex items-center gap-3">
+      <!-- Quantum Audio Live React Button -->
+      <button id="audio-toggle-btn" class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide uppercase bg-brand-card/90 border border-white/15 text-slate-300 hover:border-brand-cyan hover:text-brand-cyan transition shadow-sm" title="Toggle Synthesizer / Audio Reactive Particles">
+        <i data-lucide="volume-x" id="audio-icon" class="w-4 h-4"></i>
+        <span id="audio-status-label" class="hidden sm:inline">SYNTH OFF</span>
+      </button>
+
+      <!-- Upload Modal Launch Button -->
+      <button onclick="openUploadModal()" class="relative group overflow-hidden px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-black bg-gradient-to-r from-brand-cyan via-white to-brand-cyan bg-[length:200%_auto] hover:bg-right transition-all duration-500 shadow-[0_0_20px_rgba(0,240,255,0.4)] flex items-center gap-2">
+        <i data-lucide="cloud-upload" class="w-4 h-4 text-black"></i>
+        <span>Upload Video</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-scroller" class="snap-container relative z-10">
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: HERO / THE QUANTUM PORTAL       -->
+    <!-- ========================================== -->
+    <section id="hero" class="snap-section relative flex flex-col justify-center items-center px-6 text-center select-none">
+      <div class="max-w-4xl mx-auto flex flex-col items-center pt-16">
+        
+        <!-- Animated Badge -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-brand-surface/90 border border-brand-cyan/30 text-brand-cyan text-xs font-medium tracking-widest uppercase mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(0,240,255,0.2)] animate-pulse">
+          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+          Next-Gen Immersive Music Video Network
+        </div>
+
+        <!-- Hero Headline with User's Exact Brand Title -->
+        <div class="relative my-2">
+          <h1 class="text-6xl sm:text-8xl md:text-9xl font-marker tracking-tight text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">Music</span>
+          </h1>
+          <h2 class="text-3xl sm:text-5xl md:text-6xl font-cinzel font-black tracking-[0.45em] text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-white to-brand-magenta mt-[-0.2em] uppercase text-glow">
+            UNLEASH
+          </h2>
+        </div>
+
+        <!-- Dynamic Subtitle -->
+        <p class="max-w-2xl text-slate-300 text-sm sm:text-base md:text-lg font-light mt-6 leading-relaxed">
+          The ultimate stage for musicians, violin virtuosos, composers, and cyber-synth creators. 
+          Upload your high-fidelity music videos into a living 3D Quantum field with zero compression loss.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-10">
+          <button onclick="scrollToSection('vault')" class="px-8 py-3.5 rounded-xl font-bold text-sm tracking-widest uppercase bg-gradient-to-r from-brand-cyan to-brand-purple text-black font-sans hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+            <i data-lucide="play-circle" class="w-5 h-5 text-black"></i>
+            Watch Releases
+          </button>
+          
+          <button onclick="openUploadModal()" class="px-8 py-3.5 rounded-xl font-bold text-sm tracking-widest uppercase bg-brand-surface/80 hover:bg-brand-surface border border-white/20 text-white backdrop-blur-md hover:border-brand-cyan transition-all flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-cyan"></i>
+            Drop Your Track
+          </button>
+        </div>
+
+        <!-- Quick Live Metrics -->
+        <div class="grid grid-cols-3 gap-6 sm:gap-12 mt-16 pt-8 border-t border-white/10 w-full max-w-xl text-center">
+          <div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white font-cinzel">4K 60FPS</div>
+            <div class="text-[11px] uppercase tracking-wider text-slate-400 mt-1">Lossless Video</div>
+          </div>
+          <div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-brand-cyan font-cinzel">Spatial 3D</div>
+            <div class="text-[11px] uppercase tracking-wider text-slate-400 mt-1">Quantum Engine</div>
+          </div>
+          <div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-brand-magenta font-cinzel">100% Free</div>
+            <div class="text-[11px] uppercase tracking-wider text-slate-400 mt-1">Artist Direct</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-400 hover:text-white cursor-pointer" onclick="scrollToSection('vault')">
+        <span class="text-[10px] tracking-[0.3em] uppercase">Scroll To Unleash</span>
+        <div class="w-5 h-8 rounded-full border-2 border-slate-500 flex justify-center p-1">
+          <div class="w-1.5 h-2 bg-brand-cyan rounded-full animate-bounce"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 2: VIDEO VAULT (FEED & SHOWCASE)  -->
+    <!-- ========================================== -->
+    <section id="vault" class="snap-section relative flex flex-col justify-center px-6 md:px-16 py-20 min-h-screen">
+      <div class="max-w-7xl mx-auto w-full">
+        
+        <!-- Header row -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div class="flex items-center gap-2 text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2">
+              <i data-lucide="disc" class="w-4 h-4 animate-spin"></i>
+              Curated Video Releases
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-cinzel font-black tracking-wider text-white">
+              UNLEASHED <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-purple">VAULT</span>
+            </h2>
+          </div>
+
+          <!-- Category Filter Pills -->
+          <div class="flex flex-wrap items-center gap-2" id="filter-container">
+            <button onclick="filterVideos('all')" class="filter-pill active px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider bg-brand-cyan text-black transition">ALL</button>
+            <button onclick="filterVideos('violin')" class="filter-pill px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider bg-brand-surface border border-white/10 text-slate-300 hover:text-white transition">VIOLIN & ACOUSTIC</button>
+            <button onclick="filterVideos('electronic')" class="filter-pill px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider bg-brand-surface border border-white/10 text-slate-300 hover:text-white transition">CYBER EDM</button>
+            <button onclick="filterVideos('orchestral')" class="filter-pill px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider bg-brand-surface border border-white/10 text-slate-300 hover:text-white transition">CINEMATIC</button>
+          </div>
+        </div>
+
+        <!-- Video Card Grid -->
+        <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Populated dynamically via JavaScript with video records -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: CREATOR STUDIO (DRAG & DROP)   -->
+    <!-- ========================================== -->
+    <section id="studio" class="snap-section relative flex flex-col justify-center px-6 md:px-16 py-20 min-h-screen">
+      <div class="max-w-6xl mx-auto w-full">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-magenta/40 text-brand-magenta text-xs font-bold uppercase tracking-widest mb-3">
+            <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i> Fast High-Res Engine
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-cinzel font-black tracking-wide text-white">
+            UPLOAD TO <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-magenta via-white to-brand-cyan">UNLEASH</span>
+          </h2>
+          <p class="text-slate-400 text-sm mt-3">
+            Drag & drop raw MP4/WebM files or link video embeds. Your music video immediately joins the decentralized quantum cloud player.
+          </p>
+        </div>
+
+        <!-- Studio Dashboard Form Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Drop Area (Left 7 Cols) -->
+          <div class="lg:col-span-7 glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden group">
+            <input type="file" id="studio-file-input" accept="video/mp4,video/webm,video/ogg" class="hidden" onchange="handleFileSelect(event)">
+            
+            <div id="drop-zone" onclick="document.getElementById('studio-file-input').click()" class="border-2 border-dashed border-white/20 hover:border-brand-cyan rounded-xl p-8 sm:p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 bg-brand-card/40 hover:bg-brand-card/80">
+              
+              <div class="w-20 h-20 rounded-2xl bg-brand-surface border border-white/10 flex items-center justify-center text-brand-cyan mb-4 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(0,240,255,0.4)] transition-all">
+                <i data-lucide="video" class="w-10 h-10"></i>
+              </div>
+
+              <h3 class="text-lg font-bold text-white mb-1">Select or Drop Video File</h3>
+              <p class="text-xs text-slate-400 max-w-sm mb-4">Supports 4K MP4, WebM, ProRes. Direct client-side streaming preview with live audio spectrogram.</p>
+              
+              <span class="px-4 py-2 rounded-lg bg-white/10 text-white text-xs font-semibold tracking-wider uppercase group-hover:bg-brand-cyan group-hover:text-black transition">
+                Browse Files
+              </span>
+            </div>
+
+            <!-- Instant Video Preview player container (initially hidden) -->
+            <div id="preview-video-container" class="hidden mt-6 rounded-xl overflow-hidden border border-brand-cyan/40 bg-black">
+              <video id="preview-video-player" class="w-full aspect-video object-cover" controls></video>
+              <div class="p-3 bg-brand-surface/90 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span id="file-info-label">video_render_master.mp4</span>
+                <span class="text-slate-400">READY TO PUBLISH</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadata & Publishing Controls (Right 5 Cols) -->
+          <div class="lg:col-span-5 glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-4">
+            <h3 class="text-lg font-cinzel font-bold text-white tracking-wider flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-brand-cyan"></i>
+              Track Telemetry
+            </h3>
+
+            <div>
+              <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-1.5">Track / Video Title</label>
+              <input type="text" id="upload-title" placeholder="e.g. Celestial Violin Sonata No. 9" class="w-full bg-brand-card/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-cyan transition">
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-1.5">Artist / Producer Name</label>
+              <input type="text" id="upload-artist" placeholder="e.g. Unleash Orchestra & CyberKidd" class="w-full bg-brand-card/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-cyan transition">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-1.5">Genre</label>
+                <select id="upload-genre" class="w-full bg-brand-card/80 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan">
+                  <option value="violin">Violin & Strings</option>
+                  <option value="electronic">Cyber EDM / Bass</option>
+                  <option value="orchestral">Cinematic Orchestral</option>
+                  <option value="rock">Acoustic / Fusion</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-1.5">BPM / Key</label>
+                <input type="text" id="upload-bpm" placeholder="138 BPM • D Min" class="w-full bg-brand-card/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-1.5">External Link (YouTube / Vimeo / CDN)</label>
+              <input type="url" id="upload-url" placeholder="https://www.youtube.com/watch?v=... or direct MP4 link" class="w-full bg-brand-card/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan transition">
+            </div>
+
+            <button onclick="submitUpload()" class="mt-2 w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest bg-gradient-to-r from-brand-cyan via-white to-brand-magenta text-black hover:shadow-[0_0_25px_rgba(255,0,122,0.4)] transition-all flex items-center justify-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-black"></i>
+              Broadcast & Unleash Video
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 4: LIVE QUANTUM REACTOR             -->
+    <!-- ========================================== -->
+    <section id="quantum-reactor" class="snap-section relative flex flex-col justify-center px-6 md:px-16 py-20 min-h-screen">
+      <div class="max-w-6xl mx-auto w-full">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <!-- Text controls on left -->
+          <div class="lg:col-span-5 flex flex-col gap-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-cyan/40 text-brand-cyan text-xs font-bold uppercase tracking-widest w-fit">
+              <i data-lucide="radio" class="w-4 h-4 animate-pulse"></i> WebGL Particle Geometry
+            </div>
+            
+            <h2 class="text-4xl sm:text-5xl font-cinzel font-black tracking-wide text-white">
+              QUANTUM <br><span class="text-brand-cyan text-glow">RESONANCE</span>
+            </h2>
+            
+            <p class="text-slate-300 text-sm leading-relaxed">
+              Every note of your violin, cello, and digital synth reshapes the geometric particle cloud in real-time. 
+              Switch vibration modes, adjust particle swarm density, or pulse the central gravitational node.
+            </p>
+
+            <!-- Reactor Sliders & Interactive Controls -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col gap-5 border border-white/10">
+              <!-- Particle Count Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                  <span>Particle Velocity</span>
+                  <span id="speed-val" class="text-brand-cyan font-mono">1.2x</span>
+                </div>
+                <input type="range" min="0.2" max="3.5" step="0.1" value="1.2" oninput="updateParticleSpeed(this.value)" class="w-full accent-brand-cyan cursor-pointer">
+              </div>
+
+              <!-- Swarm Shape Mode Toggle -->
+              <div>
+                <label class="block text-xs uppercase font-bold tracking-wider text-slate-400 mb-2">Resonance Geometry</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button onclick="setGeometryMode('vortex')" class="geo-btn active px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-brand-cyan text-black transition">Vortex</button>
+                  <button onclick="setGeometryMode('torus')" class="geo-btn px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-brand-surface border border-white/10 text-slate-300 hover:text-white transition">Violin Strings</button>
+                  <button onclick="setGeometryMode('hypersphere')" class="geo-btn px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-brand-surface border border-white/10 text-slate-300 hover:text-white transition">Cosmic Orb</button>
+                </div>
+              </div>
+
+              <!-- Audio Synthesizer Trigger Button -->
+              <button onclick="toggleAudioSynthesizer()" class="w-full py-3 rounded-xl border border-brand-cyan/40 hover:border-brand-cyan bg-brand-cyan/10 hover:bg-brand-cyan/20 text-brand-cyan text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2">
+                <i data-lucide="music-4" class="w-4 h-4"></i>
+                <span id="synth-btn-text">Generate Sine & Cello Harmonic Pulse</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Visualizer Monitor Frame (Right 7 Cols) -->
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 md:p-8 relative border border-white/10 flex flex-col items-center justify-center text-center">
+            
+            <div class="relative w-full aspect-square max-w-[420px] rounded-2xl overflow-hidden flex items-center justify-center border border-brand-cyan/30 shadow-[0_0_50px_rgba(0,240,255,0.15)] bg-brand-black/80">
+              
+              <!-- Center Glow Emblem -->
+              <div class="absolute inset-0 bg-radial from-brand-cyan/20 via-transparent to-transparent pointer-events-none"></div>
+
+              <!-- Large Stylized Violin Audio Silhouette -->
+              <svg class="w-56 h-56 text-white/90 animate-pulse drop-shadow-[0_0_35px_rgba(0,240,255,0.8)]" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <circle cx="30" cy="20" r="7" stroke-width="2" />
+                <path d="M30 27 L30 85 M23 35 L37 35 M23 48 L37 48" stroke-width="2.5" stroke-linecap="round" />
+                <path d="M24 50 C14 55, 10 65, 17 74 C12 84, 17 92, 28 94" stroke-width="2" />
+                <path d="M42 68 C52 32, 60 20, 68 58 C72 45, 80 32, 90 52" stroke="url(#hero-reactor-grad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M35 88 Q50 80 65 88 T95 88" stroke-width="2" stroke-dasharray="3 3" />
+                <defs>
+                  <linearGradient id="hero-reactor-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#00F0FF" />
+                    <stop offset="100%" stop-color="#FF007A" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- Live Audio Frequency Bars Overlay (Canvas) -->
+              <canvas id="frequency-bar-canvas" class="absolute bottom-4 left-6 right-6 h-16 w-[calc(100%-3rem)] pointer-events-none"></canvas>
+
+              <div class="absolute top-4 left-4 flex items-center gap-2 text-[10px] font-mono text-brand-cyan bg-brand-surface/80 px-2.5 py-1 rounded-md border border-brand-cyan/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-ping"></span>
+                <span>HARMONIC FIELD: ACTIVE</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between w-full max-w-[420px] mt-4 text-xs font-mono text-slate-400">
+              <span>FREQUENCY: <span id="freq-readout" class="text-white">432.00 Hz</span></span>
+              <span>PARTICLES: <span class="text-brand-cyan">12,000</span></span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 5: FOOTER & CREATOR COMMUNITY       -->
+    <!-- ========================================== -->
+    <footer class="snap-section relative flex flex-col justify-between px-6 md:px-16 py-16 min-h-screen bg-brand-black/95">
+      <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col justify-center items-center text-center">
+        
+        <div class="w-20 h-20 rounded-3xl bg-brand-surface border border-white/10 flex items-center justify-center text-white mb-6 shadow-[0_0_40px_rgba(0,240,255,0.3)]">
+          <svg class="w-12 h-12" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+            <circle cx="28" cy="18" r="6" stroke-width="2.5" />
+            <path d="M28 24 L28 85 M20 85 L36 85" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M38 65 C48 30, 56 22, 64 58 C68 45, 75 32, 85 52" stroke="#00F0FF" stroke-width="4.5" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <h2 class="text-4xl sm:text-6xl font-marker tracking-wide text-white mb-2">Music Unleash</h2>
+        <p class="text-xs uppercase tracking-[0.4em] font-cinzel text-brand-cyan mb-8">Unshackle Your Sonic Potential</p>
+
+        <p class="max-w-xl text-slate-400 text-sm leading-relaxed mb-10">
+          Created for high-octane composers, violin shredders, underground electronic artists, and listeners who crave 
+          uncompressed multi-sensory experiences.
+        </p>
+
+        <!-- Social Action Buttons -->
+        <div class="flex flex-wrap gap-4 justify-center">
+          <button onclick="openUploadModal()" class="px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest bg-brand-cyan text-black hover:bg-white transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]">
+            Join As Artist
+          </button>
+          <button onclick="scrollToSection('hero')" class="px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest bg-brand-surface border border-white/20 text-white hover:border-brand-cyan transition-all">
+            Return to Vortex
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Copyright & Info Subbar -->
+      <div class="max-w-7xl mx-auto w-full pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <span>© <span id="current-year">2026</span> Music Unleash. All Rights Reserved. Built with WebGL, Three.js & GSAP.</span>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-brand-cyan transition">Privacy Engine</a>
+          <a href="#" class="hover:text-brand-cyan transition">Sound API</a>
+          <a href="#" class="hover:text-brand-cyan transition">Artist Terms</a>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: VIDEO CINEMA VIEWER                 -->
+  <!-- ========================================== -->
+  <div id="video-cinema-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-2xl p-4 sm:p-8">
+    <div class="relative w-full max-w-5xl glass-card rounded-2xl overflow-hidden border border-brand-cyan/40 shadow-[0_0_80px_rgba(0,240,255,0.3)] flex flex-col">
+      
+      <!-- Modal Top Bar -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-brand-surface/90">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-brand-cyan animate-pulse"></div>
+          <div>
+            <h4 id="cinema-modal-title" class="text-sm font-bold text-white tracking-wide">Video Master Playback</h4>
+            <p id="cinema-modal-artist" class="text-[11px] text-slate-400">Artist</p>
+          </div>
+        </div>
+
+        <button onclick="closeCinemaModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Video Screen Area -->
+      <div class="relative w-full bg-black aspect-video flex items-center justify-center">
+        <!-- Native Video Tag -->
+        <video id="cinema-video-element" class="w-full h-full object-contain" controls autoplay></video>
+        <!-- Iframe for YouTube fallback -->
+        <iframe id="cinema-iframe-element" class="hidden w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <!-- Modal Bottom Information Bar -->
+      <div class="p-6 bg-brand-surface/90 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <button id="cinema-like-btn" onclick="toggleCinemaLike()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:border-brand-magenta hover:text-brand-magenta transition">
+            <i data-lucide="heart" class="w-4 h-4"></i>
+            <span id="cinema-like-count">1.4k</span>
+          </button>
+          <button onclick="shareCurrentVideo()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:border-brand-cyan hover:text-brand-cyan transition">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span>Share</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+          <span class="px-2.5 py-1 rounded bg-brand-card border border-white/10 text-brand-cyan">4K SPATIAL</span>
+          <span class="px-2.5 py-1 rounded bg-brand-card border border-white/10 text-white">LOSSLESS 96kHz</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: QUICK UPLOAD DIALOGUE               -->
+  <!-- ========================================== -->
+  <div id="quick-upload-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-xl p-4">
+    <div class="relative w-full max-w-lg glass-card rounded-2xl p-6 sm:p-8 border border-brand-cyan/40">
+      
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2 text-brand-cyan font-bold text-sm tracking-wider uppercase">
+          <i data-lucide="upload" class="w-4 h-4"></i> Instant Music Video Upload
+        </div>
+        <button onclick="closeUploadModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="block text-xs uppercase font-bold text-slate-300 mb-1">Track Title</label>
+          <input type="text" id="modal-title" placeholder="Violin Storm (Live at Neo-Tokyo)" class="w-full bg-brand-card border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-cyan">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-slate-300 mb-1">Artist Name</label>
+          <input type="text" id="modal-artist" placeholder="Music Unleash Resident" class="w-full bg-brand-card border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-cyan">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-slate-300 mb-1">Genre Category</label>
+          <select id="modal-genre" class="w-full bg-brand-card border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan">
+            <option value="violin">Violin Solo & String Symphony</option>
+            <option value="electronic">Cyberpunk & Electronic</option>
+            <option value="orchestral">Epic Orchestral & Soundtrack</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-slate-300 mb-1">Video File or URL</label>
+          <input type="file" id="modal-file" accept="video/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-cyan file:text-black hover:file:bg-white cursor-pointer mb-2">
+          <div class="text-[11px] text-slate-400 text-center uppercase tracking-widest my-1">- Or Paste YouTube / Direct MP4 URL -</div>
+          <input type="url" id="modal-url" placeholder="https://..." class="w-full bg-brand-card border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-brand-cyan">
+        </div>
+
+        <button onclick="handleQuickModalSubmit()" class="mt-2 w-full py-3 rounded-xl font-bold text-xs uppercase tracking-widest bg-gradient-to-r from-brand-cyan to-brand-magenta text-black hover:opacity-95 transition">
+          Publish to Music Unleash Feed
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* Global Initial State & Sample High-Energy Tracks */
+    let currentUploadedVideoData = null;
+    let isSynthActive = false;
+    let audioCtx = null;
+    let synthOscillator = null;
+    let synthGain = null;
+    let analyserNode = null;
+    let currentGeoMode = 'vortex';
+    let particleSpeedMultiplier = 1.2;
+
+    // Default Curated Music Unleash Tracks
+    let videoReleases = [
+      {
+        id: 'track-1',
+        title: 'Cyberpunk Paganini Violin Caprice 24',
+        artist: 'Elena Rostova & Neo Strings',
+        genre: 'violin',
+        bpm: '154 BPM • A Min',
+        likes: 3420,
+        views: '48.9K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 
+        thumb: 'https://images.unsplash.com/photo-1612225330812-01a9c6b355ec?auto=format&fit=crop&w=800&q=80',
+        tag: 'Featured Release'
+      },
+      {
+        id: 'track-2',
+        title: 'Quantum Resonance: Electric Cello Symphony',
+        artist: 'The Unleashed Ensemble',
+        genre: 'orchestral',
+        bpm: '128 BPM • D Min',
+        likes: 2190,
+        views: '32.1K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+        thumb: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+        tag: 'Orchestral Hybrid'
+      },
+      {
+        id: 'track-3',
+        title: 'Sub-Zero Bassline & Glitch Violin Drops',
+        artist: 'Vortex Protocol ft. Maya Lin',
+        genre: 'electronic',
+        bpm: '174 BPM • F# Min',
+        likes: 4890,
+        views: '91.4K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        thumb: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+        tag: 'Cyber EDM'
+      },
+      {
+        id: 'track-4',
+        title: 'Midnight Solitude (Acoustic Solo)',
+        artist: 'Julian Thorne',
+        genre: 'violin',
+        bpm: '88 BPM • G Maj',
+        likes: 1250,
+        views: '18.7K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+        thumb: 'https://images.unsplash.com/photo-1520523839898-50712825e3a7?auto=format&fit=crop&w=800&q=80',
+        tag: 'Acoustic Solo'
+      },
+      {
+        id: 'track-5',
+        title: 'Interstellar Supernova - Orchestral Suite',
+        artist: 'Music Unleash Studio Orchestra',
+        genre: 'orchestral',
+        bpm: '110 BPM • C Maj',
+        likes: 5610,
+        views: '112K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+        thumb: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?auto=format&fit=crop&w=800&q=80',
+        tag: 'Cinematic 4K'
+      },
+      {
+        id: 'track-6',
+        title: 'Neon Odyssey (Synthwave & Stradivarius)',
+        artist: 'Kavinsky Soul & Aria Chen',
+        genre: 'electronic',
+        bpm: '132 BPM • E Min',
+        likes: 3100,
+        views: '54.2K',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+        thumb: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
+        tag: 'Neo-Classical'
+      }
+    ];
+
+    let scene, camera, renderer, particleGeometry, particleMaterial, particleSystem;
+    const PARTICLE_COUNT = 9000;
+    let particlePositions = new Float32Array(PARTICLE_COUNT * 3);
+    let initialPositions = new Float32Array(PARTICLE_COUNT * 3);
+    let particleColors = new Float32Array(PARTICLE_COUNT * 3);
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+
+    function initQuantumParticles() {
+      const container = document.getElementById('quantum-canvas-container');
+      const canvas = document.getElementById('quantum-particles-canvas');
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
+      camera.position.z = 700;
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      particleGeometry = new THREE.BufferGeometry();
+
+      // Palette definition: Cyan (#00F0FF) to Magenta (#FF007A) to Pure White
+      const c1 = new THREE.Color(0x00F0FF);
+      const c2 = new THREE.Color(0xFF007A);
+      const c3 = new THREE.Color(0xFFFFFF);
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        // Create spiral vortex distribution initially
+        const angle = i * 0.12;
+        const radius = 30 + Math.pow(i / PARTICLE_COUNT, 0.7) * 450;
+        
+        const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 40;
+        const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 40;
+        const z = (Math.random() - 0.5) * 600;
+
+        particlePositions[i3] = x;
+        particlePositions[i3 + 1] = y;
+        particlePositions[i3 + 2] = z;
+
+        initialPositions[i3] = x;
+        initialPositions[i3 + 1] = y;
+        initialPositions[i3 + 2] = z;
+
+        // Gradient coloring
+        const lerpFactor = Math.random();
+        const color = lerpFactor < 0.6 ? c1.clone().lerp(c2, lerpFactor / 0.6) : c2.clone().lerp(c3, (lerpFactor - 0.6) / 0.4);
+        particleColors[i3] = color.r;
+        particleColors[i3 + 1] = color.g;
+        particleColors[i3 + 2] = color.b;
+      }
+
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+      particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+      // Circular particle texture generator
+      const pCanvas = document.createElement('canvas');
+      pCanvas.width = 32;
+      pCanvas.height = 32;
+      const ctx = pCanvas.getContext('2d');
+      const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.3, 'rgba(0,240,255,0.8)');
+      grad.addColorStop(0.7, 'rgba(121,40,202,0.3)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(16, 16, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      const particleTexture = new THREE.CanvasTexture(pCanvas);
+
+      particleMaterial = new THREE.PointsMaterial({
+        size: 3.2,
+        vertexColors: true,
+        map: particleTexture,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+      scene.add(particleSystem);
+
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('mousemove', onMouseMove);
+    }
+
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onMouseMove(event) {
+      mouseX = (event.clientX - window.innerWidth / 2) * 0.5;
+      mouseY = (event.clientY - window.innerHeight / 2) * 0.5;
+    }
+
+    let clock = new THREE.Clock();
+
+    function animateQuantumWorld() {
+      requestAnimationFrame(animateQuantumWorld);
+
+      const elapsedTime = clock.getElapsedTime() * particleSpeedMultiplier;
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
+
+      camera.position.x = targetX * 0.5;
+      camera.position.y = -targetY * 0.5;
+      camera.lookAt(scene.position);
+
+      // Audio reactive amplitude fetch
+      let audioAmp = 0;
+      if (analyserNode) {
+        const dataArr = new Uint8Array(analyserNode.frequencyBinCount);
+        analyserNode.getByteFrequencyData(dataArr);
+        let sum = 0;
+        for (let i = 0; i < 32; i++) {
+          sum += dataArr[i];
+        }
+        audioAmp = (sum / 32) / 255;
+      }
+
+      const positions = particleGeometry.attributes.position.array;
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        const ix = initialPositions[i3];
+        const iy = initialPositions[i3 + 1];
+        const iz = initialPositions[i3 + 2];
+
+        if (currentGeoMode === 'vortex') {
+          const wave = Math.sin(elapsedTime * 1.5 + ix * 0.01) * (20 + audioAmp * 60);
+          positions[i3 + 2] = iz + wave;
+        } else if (currentGeoMode === 'torus') {
+          // Parallel violin strings resonance
+          const stringIndex = i % 4;
+          const stringY = (stringIndex - 1.5) * 120;
+          positions[i3 + 1] = stringY + Math.sin(elapsedTime * 8 + ix * 0.02) * (15 + audioAmp * 70);
+        } else if (currentGeoMode === 'hypersphere') {
+          // Exploding sphere pulse
+          const distance = Math.sqrt(ix * ix + iy * iy + iz * iz) || 1;
+          const pulse = (Math.sin(elapsedTime * 2.0) + 1.2) * (1 + audioAmp * 1.5);
+          positions[i3] = (ix / distance) * 260 * pulse;
+          positions[i3 + 1] = (iy / distance) * 260 * pulse;
+          positions[i3 + 2] = (iz / distance) * 260 * pulse;
+        }
+      }
+
+      particleGeometry.attributes.position.needsUpdate = true;
+      particleSystem.rotation.y = elapsedTime * 0.06;
+      particleSystem.rotation.z = elapsedTime * 0.03;
+
+      renderer.render(scene, camera);
+      drawFrequencyBars(audioAmp);
+    }
+
+    function updateParticleSpeed(val) {
+      particleSpeedMultiplier = parseFloat(val);
+      document.getElementById('speed-val').innerText = `${val}x`;
+    }
+
+    function setGeometryMode(mode) {
+      currentGeoMode = mode;
+      document.querySelectorAll('.geo-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-brand-cyan', 'text-black');
+        btn.classList.add('bg-brand-surface', 'border', 'border-white/10', 'text-slate-300');
+      });
+      event.target.classList.remove('bg-brand-surface', 'border', 'border-white/10', 'text-slate-300');
+      event.target.classList.add('active', 'bg-brand-cyan', 'text-black');
+    }
+
+    function toggleAudioSynthesizer() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyserNode = audioCtx.createAnalyser();
+          analyserNode.fftSize = 64;
+        }
+
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        if (!isSynthActive) {
+          // Create synthetic violin/cello rich harmonic drone
+          synthOscillator = audioCtx.createOscillator();
+          synthOscillator.type = 'sawtooth';
+          synthOscillator.frequency.setValueAtTime(110, audioCtx.currentTime); // Low A
+
+          // Biquad Filter for warm string tone
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+
+          synthGain = audioCtx.createGain();
+          synthGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          synthGain.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime + 1.2);
+
+          synthOscillator.connect(filter);
+          filter.connect(synthGain);
+          synthGain.connect(analyserNode);
+          analyserNode.connect(audioCtx.destination);
+
+          synthOscillator.start();
+          isSynthActive = true;
+
+          document.getElementById('synth-btn-text').innerText = "Halt Quantum Harmonic Drone";
+          document.getElementById('audio-status-label').innerText = "SYNTH ON (432Hz)";
+          document.getElementById('audio-toggle-btn').classList.add('border-brand-cyan', 'text-brand-cyan');
+          document.getElementById('audio-icon').setAttribute('data-lucide', 'volume-2');
+          lucide.createIcons();
+        } else {
+          if (synthGain) {
+            synthGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+            setTimeout(() => {
+              if (synthOscillator) synthOscillator.stop();
+              synthOscillator = null;
+            }, 650);
+          }
+          isSynthActive = false;
+          document.getElementById('synth-btn-text').innerText = "Generate Sine & Cello Harmonic Pulse";
+          document.getElementById('audio-status-label').innerText = "SYNTH OFF";
+          document.getElementById('audio-toggle-btn').classList.remove('border-brand-cyan', 'text-brand-cyan');
+          document.getElementById('audio-icon').setAttribute('data-lucide', 'volume-x');
+          lucide.createIcons();
+        }
+      } catch (err) {
+        console.error("Audio initialization error:", err);
+      }
+    }
+
+    document.getElementById('audio-toggle-btn').addEventListener('click', toggleAudioSynthesizer);
+
+    function drawFrequencyBars(intensity) {
+      const c = document.getElementById('frequency-bar-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const bars = 24;
+      const barWidth = c.width / bars;
+
+      for (let i = 0; i < bars; i++) {
+        const height = (Math.sin(Date.now() * 0.005 + i * 0.4) * 0.5 + 0.5) * c.height * (0.3 + intensity * 0.7);
+        const x = i * barWidth;
+        const y = c.height - height;
+
+        const grad = ctx.createLinearGradient(0, y, 0, c.height);
+        grad.addColorStop(0, '#00F0FF');
+        grad.addColorStop(1, '#FF007A');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(x + 2, y, barWidth - 4, height);
+      }
+    }
+
+    function renderVideoCards(items) {
+      const grid = document.getElementById('video-grid');
+      grid.innerHTML = '';
+
+      items.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = "glass-card glass-card-hover rounded-2xl overflow-hidden flex flex-col group cursor-pointer";
+        card.onclick = () => openCinemaModal(item);
+
+        card.innerHTML = `
+          <div class="relative w-full aspect-video overflow-hidden bg-brand-surface">
+            <img src="${item.thumb}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent opacity-80"></div>
+            
+            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-brand-black/70 backdrop-blur-md border border-brand-cyan/40 text-brand-cyan">
+              ${item.tag}
+            </span>
+
+            <!-- Play button pulse on hover -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-14 h-14 rounded-full bg-brand-cyan/20 border border-brand-cyan flex items-center justify-center text-white backdrop-blur-md transition-all duration-300 group-hover:scale-115 group-hover:bg-brand-cyan group-hover:text-black">
+                <i data-lucide="play" class="w-6 h-6 ml-0.5 fill-current"></i>
+              </div>
+            </div>
+
+            <span class="absolute bottom-3 right-3 px-2 py-0.5 rounded text-[10px] font-mono bg-black/80 text-white">
+              ${item.bpm}
+            </span>
+          </div>
+
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-base font-bold text-white group-hover:text-brand-cyan transition-colors line-clamp-1">${item.title}</h3>
+              <p class="text-xs text-slate-400 mt-1">${item.artist}</p>
+            </div>
+
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-white/5 text-xs text-slate-400">
+              <span class="flex items-center gap-1">
+                <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-500"></i> ${item.views}
+              </span>
+              <span class="flex items-center gap-1 text-slate-300">
+                <i data-lucide="heart" class="w-3.5 h-3.5 text-brand-magenta"></i> ${item.likes}
+              </span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function filterVideos(genre) {
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.classList.remove('active', 'bg-brand-cyan', 'text-black');
+        btn.classList.add('bg-brand-surface', 'border', 'border-white/10', 'text-slate-300');
+      });
+      event.target.classList.remove('bg-brand-surface', 'border', 'border-white/10', 'text-slate-300');
+      event.target.classList.add('active', 'bg-brand-cyan', 'text-black');
+
+      if (genre === 'all') {
+        renderVideoCards(videoReleases);
+      } else {
+        const filtered = videoReleases.filter(v => v.genre === genre);
+        renderVideoCards(filtered);
+      }
+    }
+
+    const dropZone = document.getElementById('drop-zone');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.add('border-brand-cyan', 'bg-brand-card/90'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-brand-cyan', 'bg-brand-card/90'), false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length > 0) {
+        processVideoFile(files[0]);
+      }
+    });
+
+    function handleFileSelect(e) {
+      if (e.target.files.length > 0) {
+        processVideoFile(e.target.files[0]);
+      }
+    }
+
+    function processVideoFile(file) {
+      if (!file.type.startsWith('video/')) {
+        showFloatingToast('Please select a valid video file (MP4, WebM)', 'error');
+        return;
+      }
+
+      const fileURL = URL.createObjectURL(file);
+      currentUploadedVideoData = {
+        name: file.name,
+        url: fileURL,
+        size: (file.size / (1024 * 1024)).toFixed(1) + ' MB'
+      };
+
+      const previewContainer = document.getElementById('preview-video-container');
+      const previewPlayer = document.getElementById('preview-video-player');
+      const fileInfo = document.getElementById('file-info-label');
+
+      previewPlayer.src = fileURL;
+      fileInfo.innerText = `${file.name} (${currentUploadedVideoData.size})`;
+      previewContainer.classList.remove('hidden');
+
+      // Autofill title if empty
+      const titleInput = document.getElementById('upload-title');
+      if (!titleInput.value) {
+        titleInput.value = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+      }
+
+      showFloatingToast('Video loaded successfully! Ready to broadcast.', 'success');
+    }
+
+    function submitUpload() {
+      const title = document.getElementById('upload-title').value.trim();
+      const artist = document.getElementById('upload-artist').value.trim() || 'Music Unleash Artist';
+      const genre = document.getElementById('upload-genre').value;
+      const bpm = document.getElementById('upload-bpm').value.trim() || '130 BPM';
+      const urlInput = document.getElementById('upload-url').value.trim();
+
+      const finalVideoUrl = currentUploadedVideoData ? currentUploadedVideoData.url : (urlInput || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+
+      if (!title) {
+        showFloatingToast('Please enter a video title!', 'error');
+        return;
+      }
+
+      const newRelease = {
+        id: 'track-' + Date.now(),
+        title: title,
+        artist: artist,
+        genre: genre,
+        bpm: bpm,
+        likes: 1,
+        views: '1',
+        videoUrl: finalVideoUrl,
+        thumb: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
+        tag: 'New Upload'
+      };
+
+      videoReleases.unshift(newRelease);
+      renderVideoCards(videoReleases);
+
+      // Trigger Confetti Celebration
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#00F0FF', '#FF007A', '#FFFFFF']
+      });
+
+      showFloatingToast(`"${title}" has been unleashed to the feed!`, 'success');
+
+      // Reset fields
+      document.getElementById('upload-title').value = '';
+      document.getElementById('upload-artist').value = '';
+      document.getElementById('upload-url').value = '';
+      document.getElementById('preview-video-container').classList.add('hidden');
+      currentUploadedVideoData = null;
+
+      // Scroll to vault to see video
+      setTimeout(() => scrollToSection('vault'), 1000);
+    }
+
+    function openUploadModal() {
+      document.getElementById('quick-upload-modal').classList.remove('hidden');
+      document.getElementById('quick-upload-modal').classList.add('flex');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('quick-upload-modal').classList.add('hidden');
+      document.getElementById('quick-upload-modal').classList.remove('flex');
+    }
+
+    function handleQuickModalSubmit() {
+      const title = document.getElementById('modal-title').value.trim();
+      const artist = document.getElementById('modal-artist').value.trim() || 'Unleash Creator';
+      const genre = document.getElementById('modal-genre').value;
+      const fileInput = document.getElementById('modal-file');
+      const urlInput = document.getElementById('modal-url').value.trim();
+
+      if (!title) {
+        showFloatingToast('Please specify a title for your track', 'error');
+        return;
+      }
+
+      let videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+      if (fileInput.files.length > 0) {
+        videoUrl = URL.createObjectURL(fileInput.files[0]);
+      } else if (urlInput) {
+        videoUrl = urlInput;
+      }
+
+      videoReleases.unshift({
+        id: 'track-' + Date.now(),
+        title: title,
+        artist: artist,
+        genre: genre,
+        bpm: '128 BPM',
+        likes: 1,
+        views: '1',
+        videoUrl: videoUrl,
+        thumb: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+        tag: 'User Drop'
+      });
+
+      renderVideoCards(videoReleases);
+      closeUploadModal();
+
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        colors: ['#00F0FF', '#7928CA', '#FFFFFF']
+      });
+
+      showFloatingToast('Video published into Music Unleash successfully!', 'success');
+      scrollToSection('vault');
+    }
+
+    let currentCinemaItem = null;
+
+    function openCinemaModal(item) {
+      currentCinemaItem = item;
+      const modal = document.getElementById('video-cinema-modal');
+      const videoEl = document.getElementById('cinema-video-element');
+      const iframeEl = document.getElementById('cinema-iframe-element');
+
+      document.getElementById('cinema-modal-title').innerText = item.title;
+      document.getElementById('cinema-modal-artist').innerText = item.artist;
+      document.getElementById('cinema-like-count').innerText = item.likes;
+
+      // Check if YouTube
+      if (item.videoUrl.includes('youtube.com') || item.videoUrl.includes('youtu.be')) {
+        videoEl.classList.add('hidden');
+        iframeEl.classList.remove('hidden');
+        let embedUrl = item.videoUrl;
+        if (item.videoUrl.includes('watch?v=')) {
+          embedUrl = item.videoUrl.replace('watch?v=', 'embed/');
+        }
+        iframeEl.src = embedUrl;
+      } else {
+        iframeEl.classList.add('hidden');
+        videoEl.classList.remove('hidden');
+        videoEl.src = item.videoUrl;
+        videoEl.play().catch(e => console.log('Autoplay handled'));
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeCinemaModal() {
+      const modal = document.getElementById('video-cinema-modal');
+      const videoEl = document.getElementById('cinema-video-element');
+      const iframeEl = document.getElementById('cinema-iframe-element');
+
+      videoEl.pause();
+      videoEl.src = '';
+      iframeEl.src = '';
+
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function toggleCinemaLike() {
+      if (!currentCinemaItem) return;
+      currentCinemaItem.likes += 1;
+      document.getElementById('cinema-like-count').innerText = currentCinemaItem.likes;
+      renderVideoCards(videoReleases);
+      showFloatingToast('Added to your favorite Unleashed tracks!', 'success');
+    }
+
+    function shareCurrentVideo() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        showFloatingToast('Link copied to clipboard!', 'success');
+      }
+    }
+
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    /* Custom Toast Message Notification */
+    function showFloatingToast(msg, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `fixed bottom-6 right-6 z-[200] px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-xl border flex items-center gap-3 transition-all duration-300 shadow-2xl ${
+        type === 'error' 
+          ? 'bg-red-950/80 border-red-500 text-red-200' 
+          : 'bg-brand-surface/90 border-brand-cyan text-brand-cyan shadow-[0_0_25px_rgba(0,240,255,0.3)]'
+      }`;
+
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full ${type === 'error' ? 'bg-red-400' : 'bg-brand-cyan'} animate-ping"></span>
+        <span>${msg}</span>
+      `;
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 350);
+      }, 3500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialize Lucide Icons
+      lucide.createIcons();
+
+      // 2. Render initial catalog of videos
+      renderVideoCards(videoReleases);
+
+      // 3. Initialize Three.js Quantum Particle Engine
+      initQuantumParticles();
+      animateQuantumWorld();
+
+      // 4. GSAP Snap on Scroll enhancement
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Subtle header transformation on scroll
+      const scroller = document.getElementById('main-scroller');
+      scroller.addEventListener('scroll', () => {
+        const header = document.getElementById('site-header');
+        if (scroller.scrollTop > 50) {
+          header.classList.add('bg-brand-black/90', 'backdrop-blur-xl', 'border-b', 'border-white/10');
+        } else {
+          header.classList.remove('bg-brand-black/90', 'backdrop-blur-xl', 'border-b', 'border-white/10');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
